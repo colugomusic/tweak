@@ -158,16 +158,24 @@ inline auto snap_value(float v, float step_size, float snap_amount)
 	return math::lerp(down, up, curve);
 }
 
+template <class T> using ToStringFunc = std::function<std::string(T)>;
+template <class T> using FromStringFunc = std::function<std::optional<T>(const std::string&)>;
+template <class T> using ConstrainFunc = std::function<T(T)>;
+template <class T> using DragFunc = std::function<T(T, int, bool)>;
+template <class T> using IncrementFunc = std::function<T(T, bool)>;
+template <class T> using DecrementFunc = std::function<T(T, bool)>;
+template <class T> using StepifyFunc = std::function<T(T)>;
+
 template <class T>
 struct Spec
 {
-	std::function<std::string(T)> to_string;
-	std::function<std::optional<T>(const std::string&)> from_string;
-	std::function<T(T)> constrain;
-	std::function<T(T, int, bool)> drag;
-	std::function<T(T, bool)> increment;
-	std::function<T(T, bool)> decrement;
-	std::function<T(T)> stepify;
+	ToStringFunc<T> to_string;
+	FromStringFunc<T> from_string;
+	ConstrainFunc<T> constrain;
+	DragFunc<T> drag;
+	IncrementFunc<T> increment;
+	DecrementFunc<T> decrement;
+	StepifyFunc<T> stepify;
 };
 
 template <class T>
