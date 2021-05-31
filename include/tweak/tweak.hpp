@@ -2,6 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <functional>
 #include <optional>
 #include <regex>
 #include <sstream>
@@ -100,6 +101,18 @@ float decrement(float v, bool precise)
 	return v - 1.0f / (precise ? Precise : Normal);
 }
 
+template <int Normal, int Precise>
+int increment(int v, bool precise)
+{
+	return v + (precise ? Precise : Normal);
+}
+
+template <int Normal, int Precise>
+int decrement(int v, bool precise)
+{
+	return v - (precise ? Precise : Normal);
+}
+
 template <int Normal>
 float increment(float v)
 {
@@ -112,19 +125,32 @@ float decrement(float v)
 	return v - 1.0f / (Normal);
 }
 
-template <int Normal, int Precise>
-float drag(float v, int amount, bool precise)
+template <int Normal>
+int increment(int v)
 {
-	return v + (float(amount) / (precise ? Precise : Normal));
+	return v + Normal;
 }
 
 template <int Normal>
-float drag(float v, int amount)
+int decrement(int v)
 {
-	return v + (float(amount) / Normal);
+	return v - Normal;
 }
 
-inline float constrain(float v, float min, float max)
+template <class T, int Normal, int Precise>
+T drag(T v, int amount, bool precise)
+{
+	return v + (T(amount) / (precise ? Precise : Normal));
+}
+
+template <class T, int Normal>
+T drag(T v, int amount)
+{
+	return v + (T(amount) / Normal);
+}
+
+template <class T>
+inline T constrain(T v, T min, T max)
 {
 	if (v < min) return min;
 	if (v > max) return max;
@@ -183,17 +209,17 @@ class Tweaker
 {
 public:
 
-	Tweaker(const Spec<T>&& spec)
+	Tweaker(const Spec<T>& spec)
 		: spec_(spec)
 	{
 	}
 
-	auto stepify(float v)
+	auto stepify(T v)
 	{
 		return spec_.stepify(v);
 	}
 
-	auto constrain(float v)
+	auto constrain(T v)
 	{
 		return spec_.constrain(v);
 	};
@@ -203,22 +229,22 @@ public:
 		return stepify(snap_value(v, step_size, snap_amount));
 	}
 
-	auto increment(float v, bool precise)
+	auto increment(T v, bool precise)
 	{
 		return constrain(stepify(spec_.increment(v, precise)));
 	}
 
-	auto decrement(float v, bool precise)
+	auto decrement(T v, bool precise)
 	{
 		return constrain(stepify(spec_.decrement(v, precise)));
 	};
 
-	auto drag(float v, int amount, bool precise)
+	auto drag(T v, int amount, bool precise)
 	{
 		return constrain(stepify(spec_.drag(v, amount, precise)));
 	};
 
-	auto to_string(float v)
+	auto to_string(T v)
 	{
 		return spec_.to_string(v);
 	}
