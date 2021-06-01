@@ -82,5 +82,90 @@ inline auto drag(float v, int amount, bool precise) -> float
 
 } // amp
 
+namespace percentage {
+
+inline auto stepify(float v)
+{
+	return tweak::math::stepify<1000>(v);
+}
+
+inline auto constrain(float v)
+{
+	return ::std::clamp(v, 0.0f, 1.0f);
+};
+
+inline auto increment(float v, bool precise)
+{
+	return tweak::increment<100, 1000>(v, precise);
+};
+
+inline auto decrement(float v, bool precise)
+{
+	return tweak::decrement<100, 1000>(v, precise);
+};
+
+inline auto drag(float v, int amount, bool precise)
+{
+	return tweak::drag<float, 100, 1000>(v, amount / 5, precise);
+};
+
+inline auto to_string(float v)
+{
+	::std::stringstream ss;
+
+	ss << stepify(v * 100.0f) << "%";
+
+	return ss.str();
+}
+
+inline auto from_string(const ::std::string& str) -> ::std::optional<float>
+{
+	auto value = tweak::find_number<float>(str);
+
+	if (!value) return ::std::optional<float>();
+
+	return (*value / 100.0f);
+};
+
+} // percentage
+
+namespace percentage_bipolar {
+
+inline auto stepify(float v)
+{
+	return math::stepify(v, 0.005f);
+}
+
+inline auto to_string(float v)
+{
+	::std::stringstream ss;
+
+	ss << percentage::stepify((v - 0.5f) * 200.0f) << "%";
+
+	return ss.str();
+}
+
+inline auto increment(float v, bool precise)
+{
+	return tweak::increment<200, 2000>(v, precise);
+};
+
+inline auto decrement(float v, bool precise)
+{
+	return tweak::decrement<200, 2000>(v, precise);
+};
+
+inline auto drag(float v, int amount, bool precise)
+{
+	return tweak::drag<float, 200, 2000>(v, amount / 5, precise);
+};
+
+inline auto from_string(const ::std::string& str)
+{
+	return percentage::from_string(str);
+};
+
+} // percentage_bipolar
+
 } // std
 } // tweak
