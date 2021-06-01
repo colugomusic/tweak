@@ -113,7 +113,7 @@ T drag(T v, int amount, bool precise)
 template <class T, int Normal>
 T drag(T v, int amount)
 {
-	return v + T(floatT(amount) / Normal);
+	return v + T(float(amount) / Normal);
 }
 
 template <class T>
