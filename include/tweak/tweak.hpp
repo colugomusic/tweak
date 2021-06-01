@@ -1,46 +1,13 @@
 #pragma once
 
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include <functional>
 #include <optional>
 #include <regex>
 #include <sstream>
 #include <string>
+#include "math.hpp"
 
 namespace tweak {
-namespace math {
-
-template <class T>
-constexpr T lerp(T a, T b, T x)
-{
-	return (x * (b - a)) + a;
-}
-
-template <class T>
-constexpr T inverse_lerp(T a, T b, T x)
-{
-	return (x - a) / (b - a);
-}
-
-template <class T>
-constexpr T stepify(T value, T step)
-{
-	if (step != 0)
-	{
-		value = std::floor(value / step + T(0.5)) * step;
-	}
-
-	return value;
-}
-
-template <int N, class T>
-constexpr T stepify(T v)
-{
-	return stepify(v, T(1.0) / N);
-}
-
-} // math
 
 template <class T> std::optional<T> find_number(const std::string& str);
 template <class T> std::optional<T> find_positive_number(const std::string& str);
@@ -140,13 +107,13 @@ int decrement(int v)
 template <class T, int Normal, int Precise>
 T drag(T v, int amount, bool precise)
 {
-	return v + (T(amount) / (precise ? Precise : Normal));
+	return v + T(float(amount) / (precise ? Precise : Normal));
 }
 
 template <class T, int Normal>
 T drag(T v, int amount)
 {
-	return v + (T(amount) / Normal);
+	return v + T(floatT(amount) / Normal);
 }
 
 template <class T>
@@ -156,6 +123,16 @@ inline T constrain(T v, T min, T max)
 	if (v > max) return max;
 
 	return v;
+}
+
+template <class T>
+inline ::std::string to_string(T v)
+{
+	::std::stringstream ss;
+
+	ss << v;
+
+	return ss.str();
 }
 
 inline auto snap_value(float v, float step_size, float snap_amount)
@@ -214,44 +191,59 @@ public:
 	{
 	}
 
-	auto stepify(T v)
+	auto stepify(T v) const
 	{
-		return spec_.stepify(v);
+		return spec_.stepify ? spec_.stepify(v) : v;
 	}
 
-	auto constrain(T v)
+	auto constrain(T v) const
 	{
-		return spec_.constrain(v);
+		return spec_.constrain ? spec_.constrain(v) : v;
 	};
 
-	auto snap_value(float v, float step_size, float snap_amount)
+	auto snap_value(float v, float step_size, float snap_amount) const
 	{
 		return stepify(snap_value(v, step_size, snap_amount));
 	}
 
-	auto increment(T v, bool precise)
+	auto increment(T v, bool precise) const
 	{
-		return constrain(stepify(spec_.increment(v, precise)));
+		return constrain(stepify(raw_increment(v, precise)));
 	}
 
-	auto decrement(T v, bool precise)
+	auto decrement(T v, bool precise) const
 	{
-		return constrain(stepify(spec_.decrement(v, precise)));
+		return constrain(stepify(raw_decrement(v, precise)));
 	};
 
-	auto drag(T v, int amount, bool precise)
+	auto drag(T v, int amount, bool precise) const
 	{
-		return constrain(stepify(spec_.drag(v, amount, precise)));
+		return constrain(stepify(raw_drag(v, amount, precise)));
 	};
 
-	auto to_string(T v)
+	auto to_string(T v) const
 	{
-		return spec_.to_string(v);
+		return spec_.to_string ? spec_.to_string(v) : "";
 	}
 
-	auto from_string(const std::string& str)
+	auto from_string(const std::string& str) const
 	{
-		return spec_.from_string(str);
+		return spec_.from_string ? spec_.from_string(str) : T(0);
+	};
+
+	auto raw_increment(T v, bool precise) const
+	{
+		return spec_.increment ? spec_.increment(v, precise) : v;
+	}
+
+	auto raw_decrement(T v, bool precise) const
+	{
+		return spec_.decrement ? spec_.decrement(v, precise) : v;
+	};
+
+	auto raw_drag(T v, int amount, bool precise) const
+	{
+		return spec_.drag ? spec_.drag(v, amount, precise) : v;
 	};
 
 private:
