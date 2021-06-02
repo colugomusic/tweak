@@ -199,7 +199,7 @@ public:
 	auto constrain(T v) const
 	{
 		return spec_.constrain ? spec_.constrain(v) : v;
-	};
+	}
 
 	auto snap_value(float v, float step_size, float snap_amount) const
 	{
@@ -214,12 +214,12 @@ public:
 	auto decrement(T v, bool precise) const
 	{
 		return constrain(stepify(raw_decrement(v, precise)));
-	};
+	}
 
 	auto drag(T v, int amount, bool precise) const
 	{
 		return constrain(stepify(raw_drag(v, amount, precise)));
-	};
+	}
 
 	auto to_string(T v) const
 	{
@@ -229,7 +229,7 @@ public:
 	auto from_string(const std::string& str) const
 	{
 		return spec_.from_string ? spec_.from_string(str) : T(0);
-	};
+	}
 
 	auto raw_increment(T v, bool precise) const
 	{
@@ -239,12 +239,12 @@ public:
 	auto raw_decrement(T v, bool precise) const
 	{
 		return spec_.decrement ? spec_.decrement(v, precise) : v;
-	};
+	}
 
 	auto raw_drag(T v, int amount, bool precise) const
 	{
 		return spec_.drag ? spec_.drag(v, amount, precise) : v;
-	};
+	}
 
 private:
 
