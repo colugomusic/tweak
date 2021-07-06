@@ -226,7 +226,7 @@ public:
 		return spec_.to_string ? spec_.to_string(v) : "";
 	}
 
-	auto from_string(const std::string& str) const
+	auto from_string(const ::std::string& str) const
 	{
 		return spec_.from_string ? spec_.from_string(str) : T(0);
 	}
