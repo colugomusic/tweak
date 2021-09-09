@@ -137,6 +137,7 @@ inline ::std::string to_string(T v)
 
 inline auto snap_value(float v, float step_size, float snap_amount)
 {
+	if (step_size == 0.0f) return v;
 	if (snap_amount <= 0.0f) return v;
 
 	if (snap_amount >= 1.0f)
