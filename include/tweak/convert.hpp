@@ -6,6 +6,22 @@ namespace tweak {
 namespace convert {
 
 template <class T>
+inline constexpr T linear_to_ratio(T x, T max = T(100))
+{
+	if (x <= 0) return 1.0f;
+
+	return ::std::pow(max, ::std::pow(x, T(2)));
+}
+
+template <class T>
+inline constexpr T ratio_to_linear(T x, T max = T(100))
+{
+	if (x <= 1) return 0.0f;
+
+	return ::std::sqrt(::std::log(x)) / ::std::sqrt(::std::log(max));
+}
+
+template <class T>
 inline T uni_to_bi(T uni)
 {
 	return (uni * T(2)) - T(1);
