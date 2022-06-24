@@ -9,11 +9,11 @@
 
 namespace tweak {
 
-template <class T> std::optional<T> find_number(const std::string& str);
-template <class T> std::optional<T> find_positive_number(const std::string& str);
+template <class T> std::optional<T> find_number(std::string str);
+template <class T> std::optional<T> find_positive_number(std::string str);
 
 template <>
-inline std::optional<float> find_number<float>(const std::string& str)
+inline std::optional<float> find_number<float>(std::string str)
 {
 	std::regex r("(\\-?\\s*[\\.\\d]+)");
 	std::smatch match;
@@ -24,7 +24,7 @@ inline std::optional<float> find_number<float>(const std::string& str)
 }
 
 template <>
-inline std::optional<int> find_number<int>(const std::string& str)
+inline std::optional<int> find_number<int>(std::string str)
 {
 	std::regex r("(\\-?\\s*[\\d]+)");
 	std::smatch match;
@@ -35,7 +35,7 @@ inline std::optional<int> find_number<int>(const std::string& str)
 }
 
 template <>
-inline std::optional<float> find_positive_number<float>(const std::string& str)
+inline std::optional<float> find_positive_number<float>(std::string str)
 {
 	std::regex r("([\\.\\d]+)");
 	std::smatch match;
@@ -46,7 +46,7 @@ inline std::optional<float> find_positive_number<float>(const std::string& str)
 }
 
 template <>
-inline std::optional<int> find_positive_number<int>(const std::string& str)
+inline std::optional<int> find_positive_number<int>(std::string str)
 {
 	std::regex r("([\\d]+)");
 	std::smatch match;
@@ -163,7 +163,7 @@ inline auto snap_value(float v, float step_size, float snap_amount)
 }
 
 template <class T> using ToStringFunc = std::function<std::string(T)>;
-template <class T> using FromStringFunc = std::function<std::optional<T>(const std::string&)>;
+template <class T> using FromStringFunc = std::function<std::optional<T>(std::string)>;
 template <class T> using ConstrainFunc = std::function<T(T)>;
 template <class T> using DragFunc = std::function<T(T, int, bool)>;
 template <class T> using IncrementFunc = std::function<T(T, bool)>;
