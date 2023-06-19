@@ -3,6 +3,7 @@
 #include "math.hpp"
 
 namespace tweak {
+#include "third_party/const_math.hpp"
 namespace convert {
 
 template <class T>
@@ -52,15 +53,13 @@ inline T filter_hz_to_linear(T hz)
 }
 
 template <class T>
-inline T linear_to_db(T linear)
-{
-	return ::std::log(linear) * T(8.6858896380650365530225783783321);
+constexpr inline T linear_to_db(T linear) {
+	return T(tweak::const_math::log(linear)) * T(8.6858896380650365530225783783321);
 }
 
 template <class T>
-inline T db_to_linear(T db)
-{
-	return ::std::exp(db * T(0.11512925464970228420089957273422));
+constexpr inline T db_to_linear(T db) {
+	return T(tweak::const_math::exp(db * T(0.11512925464970228420089957273422)));
 }
 
 template <class T>
