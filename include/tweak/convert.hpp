@@ -23,6 +23,12 @@ inline constexpr T ratio_to_linear(T x, T max = T(100))
 }
 
 template <class T>
+inline T bi_to_uni(T bi)
+{
+	return (bi + T(1)) / T(2);
+}
+
+template <class T>
 inline T uni_to_bi(T uni)
 {
 	return (uni * T(2)) - T(1);
