@@ -22,7 +22,7 @@ inline std::optional<float> find_number<float>(std::string str) {
 	try {
 		return std::stof(match[0].str());
 	}
-	catch (const std::runtime_error&) {
+	catch (const std::exception&) {
 		return std::nullopt;
 	}
 }
@@ -37,7 +37,7 @@ inline std::optional<int> find_number<int>(std::string str) {
 	try {
 		return std::stoi(match[0].str());
 	}
-	catch (const std::runtime_error&) {
+	catch (const std::exception&) {
 		return std::nullopt;
 	}
 }
@@ -47,12 +47,12 @@ inline std::optional<float> find_positive_number<float>(std::string str) {
 	std::regex r("([\\.\\d]+)");
 	std::smatch match; 
 	if (!std::regex_search(str, match, r)) {
-		return std::optional<float>();
+		return std::nullopt;
 	}
 	try {
 		return std::stof(match[0].str());
 	}
-	catch (const std::runtime_error&) {
+	catch (const std::exception&) {
 		return std::nullopt;
 	}
 }
@@ -62,12 +62,12 @@ inline std::optional<int> find_positive_number<int>(std::string str) {
 	std::regex r("([\\d]+)");
 	std::smatch match; 
 	if (!std::regex_search(str, match, r)) {
-		return std::optional<int>();
+		return std::nullopt;
 	}
 	try {
 		return std::stoi(match[0].str());
 	}
-	catch (const std::runtime_error&) {
+	catch (const std::exception&) {
 		return std::nullopt;
 	}
 }
