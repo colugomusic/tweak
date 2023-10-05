@@ -13,47 +13,63 @@ template <class T> std::optional<T> find_number(std::string str);
 template <class T> std::optional<T> find_positive_number(std::string str);
 
 template <>
-inline std::optional<float> find_number<float>(std::string str)
-{
+inline std::optional<float> find_number<float>(std::string str) {
 	std::regex r("(\\-?\\s*[\\.\\d]+)");
-	std::smatch match;
-
-	if (!std::regex_search(str, match, r)) return std::optional<float>();
-
-	return std::stof(match[0].str());
+	std::smatch match; 
+	if (!std::regex_search(str, match, r)) {
+		return std::nullopt;
+	}
+	try {
+		return std::stof(match[0].str());
+	}
+	catch (const std::runtime_error&) {
+		return std::nullopt;
+	}
 }
 
 template <>
-inline std::optional<int> find_number<int>(std::string str)
-{
+inline std::optional<int> find_number<int>(std::string str) {
 	std::regex r("(\\-?\\s*[\\d]+)");
-	std::smatch match;
-
-	if (!std::regex_search(str, match, r)) return std::optional<int>();
-
-	return std::stoi(match[0].str());
+	std::smatch match; 
+	if (!std::regex_search(str, match, r)) {
+		return std::nullopt;
+	}
+	try {
+		return std::stoi(match[0].str());
+	}
+	catch (const std::runtime_error&) {
+		return std::nullopt;
+	}
 }
 
 template <>
-inline std::optional<float> find_positive_number<float>(std::string str)
-{
+inline std::optional<float> find_positive_number<float>(std::string str) {
 	std::regex r("([\\.\\d]+)");
-	std::smatch match;
-
-	if (!std::regex_search(str, match, r)) return std::optional<float>();
-
-	return std::stof(match[0].str());
+	std::smatch match; 
+	if (!std::regex_search(str, match, r)) {
+		return std::optional<float>();
+	}
+	try {
+		return std::stof(match[0].str());
+	}
+	catch (const std::runtime_error&) {
+		return std::nullopt;
+	}
 }
 
 template <>
-inline std::optional<int> find_positive_number<int>(std::string str)
-{
+inline std::optional<int> find_positive_number<int>(std::string str) {
 	std::regex r("([\\d]+)");
-	std::smatch match;
-
-	if (!std::regex_search(str, match, r)) return std::optional<int>();
-
-	return std::stoi(match[0].str());
+	std::smatch match; 
+	if (!std::regex_search(str, match, r)) {
+		return std::optional<int>();
+	}
+	try {
+		return std::stoi(match[0].str());
+	}
+	catch (const std::runtime_error&) {
+		return std::nullopt;
+	}
 }
 
 template <int Normal, int Precise>
