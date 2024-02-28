@@ -74,6 +74,9 @@ inline auto increment(float v, bool precise)
 
 inline auto decrement(float v, bool precise)
 {
+	if (v <= SILENT) {
+		return v;
+	}
 	return convert::db_to_linear(tweak::decrement<1, 10>(convert::linear_to_db(v), precise));
 };
 
