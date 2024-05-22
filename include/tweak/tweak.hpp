@@ -178,17 +178,16 @@ inline auto snap_value(float v, float step_size, float snap_amount)
 	return math::lerp(down, up, curve);
 }
 
-template <class T> using ToStringFunc = std::function<std::string(T)>;
-template <class T> using FromStringFunc = std::function<std::optional<T>(std::string)>;
-template <class T> using ConstrainFunc = std::function<T(T)>;
-template <class T> using DragFunc = std::function<T(T, int, bool)>;
-template <class T> using IncrementFunc = std::function<T(T, bool)>;
-template <class T> using DecrementFunc = std::function<T(T, bool)>;
-template <class T> using StepifyFunc = std::function<T(T)>;
+template <class T> using ToStringFunc   = auto (*)(T) -> std::string;
+template <class T> using FromStringFunc = auto (*)(std::string) -> T;
+template <class T> using ConstrainFunc  = auto (*)(T) -> T;
+template <class T> using DragFunc       = auto (*)(T, int, bool) -> T;
+template <class T> using IncrementFunc  = auto (*)(T, bool) -> T;
+template <class T> using DecrementFunc  = auto (*)(T, bool) -> T;
+template <class T> using StepifyFunc    = auto (*)(T) -> T;
 
 template <class T>
-struct Spec
-{
+struct Spec {
 	ToStringFunc<T> to_string;
 	FromStringFunc<T> from_string;
 	ConstrainFunc<T> constrain;
@@ -199,73 +198,57 @@ struct Spec
 };
 
 template <class T>
-class Tweaker
-{
-public:
+auto stepify(const Spec<T>& spec, T v) -> T {
+	return spec.stepify ? spec.stepify(v) : v;
+}
 
-	Tweaker(const Spec<T>& spec)
-		: spec_(spec)
-	{
-	}
+template <class T>
+auto constrain(const Spec<T>& spec, T v) -> T {
+	return spec.constrain ? spec.constrain(v) : v;
+}
 
-	auto stepify(T v) const
-	{
-		return spec_.stepify ? spec_.stepify(v) : v;
-	}
+auto snap_value(const Spec<float>& spec, float v, float step_size, float snap_amount) -> float {
+	return stepify(spec, snap_value(v, step_size, snap_amount));
+}
 
-	auto constrain(T v) const
-	{
-		return spec_.constrain ? spec_.constrain(v) : v;
-	}
+template <class T>
+auto increment(const Spec<T>& spec, T v, bool precise) -> T {
+	return constrain(spec, stepify(spec, raw_increment(spec, v, precise)));
+}
 
-	auto snap_value(float v, float step_size, float snap_amount) const
-	{
-		return stepify(snap_value(v, step_size, snap_amount));
-	}
+template <class T>
+auto decrement(const Spec<T>& spec, T v, bool precise) -> T {
+	return constrain(spec, stepify(spec, raw_decrement(spec, v, precise)));
+}
 
-	auto increment(T v, bool precise) const
-	{
-		return constrain(stepify(raw_increment(v, precise)));
-	}
+template <class T>
+auto drag(const Spec<T>& spec, T v, int amount, bool precise) -> T {
+	return constrain(spec, stepify(spec, raw_drag(spec, v, amount, precise)));
+}
 
-	auto decrement(T v, bool precise) const
-	{
-		return constrain(stepify(raw_decrement(v, precise)));
-	}
+template <class T>
+auto to_string(const Spec<T>& spec, T v) -> std::string {
+	return spec.to_string ? spec.to_string(v) : "";
+}
 
-	auto drag(T v, int amount, bool precise) const
-	{
-		return constrain(stepify(raw_drag(v, amount, precise)));
-	}
+template <class T>
+auto from_string(const ::std::string& str) -> T {
+	return spec.from_string ? spec.from_string(str) : T(0);
+}
 
-	auto to_string(T v) const
-	{
-		return spec_.to_string ? spec_.to_string(v) : "";
-	}
+template <class T>
+auto raw_increment(const Spec<T>& spec, T v, bool precise) -> T {
+	return spec.increment ? spec.increment(v, precise) : v;
+}
 
-	auto from_string(const ::std::string& str) const
-	{
-		return spec_.from_string ? spec_.from_string(str) : T(0);
-	}
+template <class T>
+auto raw_decrement(const Spec<T>& spec, T v, bool precise) -> T {
+	return spec.decrement ? spec.decrement(v, precise) : v;
+}
 
-	auto raw_increment(T v, bool precise) const
-	{
-		return spec_.increment ? spec_.increment(v, precise) : v;
-	}
-
-	auto raw_decrement(T v, bool precise) const
-	{
-		return spec_.decrement ? spec_.decrement(v, precise) : v;
-	}
-
-	auto raw_drag(T v, int amount, bool precise) const
-	{
-		return spec_.drag ? spec_.drag(v, amount, precise) : v;
-	}
-
-private:
-
-	Spec<T> spec_;
-};
+template <class T>
+auto raw_drag(const Spec<T>& spec, T v, int amount, bool precise) -> T {
+	return spec.drag ? spec.drag(v, amount, precise) : v;
+}
 
 } // tweak
