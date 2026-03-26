@@ -14,3 +14,7 @@ TEST_CASE("non-finite conversion values") {
 	REQUIRE(std::isnan(tweak::convert::db_to_linear(std::numeric_limits<float>::quiet_NaN())));
 	REQUIRE(std::isnan(tweak::convert::linear_to_db(std::numeric_limits<float>::quiet_NaN())));
 }
+
+TEST_CASE("std speed compile") {
+	REQUIRE(tweak::std_::speed::from_string("2.0").value() == 2.0f);
+}

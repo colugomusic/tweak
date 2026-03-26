@@ -42,7 +42,7 @@ auto drag(T v, int amount, bool precise) -> T {
 template <std::floating_point T = float> [[nodiscard]]
 auto from_string(const std::string& str) -> std::optional<T> {
     auto uppercase = str;
-    std::transform(str.begin(), str.end(), uppercase.begin(), std::toupper);
+    std::transform(str.begin(), str.end(), uppercase.begin(), ::toupper);
     if (uppercase.find("FREEZE") != std::string::npos) { return FREEZE; }
     if (uppercase.find("NORMAL") != std::string::npos) { return NORMAL; }
     if (uppercase.find("DOUBLE") != std::string::npos) { return DOUBLE; }
