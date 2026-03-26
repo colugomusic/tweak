@@ -54,7 +54,7 @@ auto increment(T v, bool precise) -> T {
 }
 
 template <int Normal, int Precise, std::floating_point T> [[nodiscard]] constexpr
-auto decrement(float v, bool precise) -> T {
+auto decrement(T v, bool precise) -> T {
 	return v - T(1) / (precise ? Precise : Normal);
 }
 
