@@ -9,263 +9,129 @@
 
 namespace tweak {
 
-template <class T> std::optional<T> find_number(std::string str);
-template <class T> std::optional<T> find_positive_number(std::string str);
+template <class T> [[nodiscard]] auto find_number(const std::string& str) -> std::optional<T>;
+template <class T> [[nodiscard]] auto find_positive_number(const std::string& str) -> std::optional<T>;
 
-template <>
-inline std::optional<float> find_number<float>(std::string str) {
-	std::regex r("(\\-?\\s*[\\.\\d]+)");
-	std::smatch match; 
-	if (!std::regex_search(str, match, r)) {
-		return std::nullopt;
-	}
-	try {
-		return std::stof(match[0].str());
-	}
-	catch (const std::exception&) {
-		return std::nullopt;
-	}
+template <> [[nodiscard]]
+inline auto find_number<float>(const std::string& str) -> std::optional<float> {
+	auto r     = std::regex{"(\\-?\\s*[\\.\\d]+)"};
+	auto match = std::smatch{};
+	if (!std::regex_search(str, match, r)) { return std::nullopt; }
+	try                                    { return std::stof(match[0].str()); }
+	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <>
-inline std::optional<int> find_number<int>(std::string str) {
-	std::regex r("(\\-?\\s*[\\d]+)");
-	std::smatch match; 
-	if (!std::regex_search(str, match, r)) {
-		return std::nullopt;
-	}
-	try {
-		return std::stoi(match[0].str());
-	}
-	catch (const std::exception&) {
-		return std::nullopt;
-	}
+template <> [[nodiscard]]
+inline auto find_number<int>(const std::string& str) -> std::optional<int> {
+	auto r     = std::regex{"(\\-?\\s*[\\d]+)"};
+	auto match = std::smatch{};
+	if (!std::regex_search(str, match, r)) { return std::nullopt; }
+	try                                    { return std::stoi(match[0].str()); }
+	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <>
-inline std::optional<float> find_positive_number<float>(std::string str) {
-	std::regex r("([\\.\\d]+)");
-	std::smatch match; 
-	if (!std::regex_search(str, match, r)) {
-		return std::nullopt;
-	}
-	try {
-		return std::stof(match[0].str());
-	}
-	catch (const std::exception&) {
-		return std::nullopt;
-	}
+template <> [[nodiscard]]
+inline auto find_positive_number<float>(const std::string& str) -> std::optional<float> {
+	auto r     = std::regex{"([\\.\\d]+)"};
+	auto match = std::smatch{};
+	if (!std::regex_search(str, match, r)) { return std::nullopt; }
+	try                                    { return std::stof(match[0].str()); }
+	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <>
-inline std::optional<int> find_positive_number<int>(std::string str) {
-	std::regex r("([\\d]+)");
-	std::smatch match; 
-	if (!std::regex_search(str, match, r)) {
-		return std::nullopt;
-	}
-	try {
-		return std::stoi(match[0].str());
-	}
-	catch (const std::exception&) {
-		return std::nullopt;
-	}
+template <> [[nodiscard]]
+inline auto find_positive_number<int>(const std::string& str) -> std::optional<int> {
+	auto r     = std::regex{"([\\d]+)"};
+	auto match = std::smatch{};
+	if (!std::regex_search(str, match, r)) { return std::nullopt; }
+	try                                    { return std::stoi(match[0].str()); }
+	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <int Normal, int Precise>
-float increment(float v, bool precise)
-{
-	return v + 1.0f / (precise ? Precise : Normal);
+template <int Normal, int Precise, std::floating_point T> [[nodiscard]] constexpr
+auto increment(T v, bool precise) -> T {
+	return v + T(1) / (precise ? Precise : Normal);
 }
 
-template <int Normal, int Precise>
-float decrement(float v, bool precise)
-{
-	return v - 1.0f / (precise ? Precise : Normal);
+template <int Normal, int Precise, std::floating_point T> [[nodiscard]] constexpr
+auto decrement(float v, bool precise) -> T {
+	return v - T(1) / (precise ? Precise : Normal);
 }
 
-template <int Normal, int Precise>
-int increment(int v, bool precise)
-{
+template <int Normal, int Precise, std::integral T> [[nodiscard]] constexpr
+auto increment(T v, bool precise) -> T {
 	return v + (precise ? Precise : Normal);
 }
 
-template <int Normal, int Precise>
-int decrement(int v, bool precise)
-{
+template <int Normal, int Precise, std::integral T> [[nodiscard]] constexpr
+auto decrement(T v, bool precise) -> T {
 	return v - (precise ? Precise : Normal);
 }
 
-template <int Normal>
-float increment(float v)
-{
-	return v + 1.0f / (Normal);
+template <int Normal, std::floating_point T> [[nodiscard]] constexpr
+auto increment(T v) -> T {
+	return v + T(1) / (Normal);
 }
 
-template <int Normal>
-float decrement(float v)
-{
-	return v - 1.0f / (Normal);
+template <int Normal, std::floating_point T> [[nodiscard]] constexpr
+auto decrement(T v) -> T {
+	return v - T(1) / (Normal);
 }
 
-template <int Normal>
-int increment(int v)
-{
+template <int Normal, std::integral T> [[nodiscard]] constexpr
+auto increment(T v) -> T {
 	return v + Normal;
 }
 
-template <int Normal>
-int decrement(int v)
-{
+template <int Normal, std::integral T> [[nodiscard]] constexpr
+auto decrement(T v) -> T {
 	return v - Normal;
 }
 
-template <class T, int Normal, int Precise>
-T drag(T v, int amount, bool precise)
-{
-	return v + T(float(amount) / (precise ? Precise : Normal));
+template <class T, int Normal, int Precise> [[nodiscard]] constexpr
+auto drag(T v, int amount, bool precise) -> T {
+	return v + T(static_cast<float>(amount) / (precise ? Precise : Normal));
 }
 
-template <class T, int Normal>
-T drag(T v, int amount)
-{
-	return v + T(float(amount) / Normal);
+template <class T, int Normal> [[nodiscard]] constexpr
+auto drag(T v, int amount) -> T {
+	return v + T(static_cast<float>(amount) / Normal);
 }
 
-template <class T>
-inline T constrain(T v, T min, T max)
-{
+template <class T> [[nodiscard]] constexpr
+auto constrain(T v, T min, T max) -> T {
 	if (v < min) return min;
 	if (v > max) return max;
-
 	return v;
 }
 
-template <class T>
-inline ::std::string to_string(T v)
-{
-	::std::stringstream ss;
-
+template <class T> [[nodiscard]]
+auto to_string(T v) -> std::string {
+	std::stringstream ss;
 	ss << v;
-
 	return ss.str();
 }
 
-inline auto snap_value(float v, float step_size, float snap_amount)
-{
-	if (step_size == 0.0f) return v;
-	if (snap_amount <= 0.0f) return v;
-
-	if (snap_amount >= 1.0f)
-	{
+template <std::floating_point T> [[nodiscard]]
+auto snap_value(T v, T step_size, T snap_amount) -> T {
+	if (step_size == T(0))   { return v; }
+	if (snap_amount <= T(0)) { return v; }
+	if (snap_amount >= T(1)) {
 		v /= step_size;
 		v = std::round(v);
 		v *= step_size;
-
 		return v;
 	}
-
-	const auto up = std::ceil((v / step_size) + 0.0001f) * step_size;
+	const auto up   = std::ceil((v / step_size) + T(0.0001)) * step_size;
 	const auto down = std::floor(v / step_size) * step_size;
-	const auto x = math::inverse_lerp(down, up, v);
-	const auto t = x * 2.0f;
-	const auto i = 1.0f + (std::pow(snap_amount, 4.0f) * 99.0f);
+	const auto x    = math::inverse_lerp(down, up, v);
+	const auto t    = x * T(2);
+	const auto i    = T(1) + (std::pow(snap_amount, T(4)) * T(99));
 	const auto curve =
-		t < 1.0f
-		? 1.0f - (0.5f * (std::pow(1.0f - t, 1.0f / i) + 1.0f))
-		: 0.5f * (std::pow(t - 1.0f, 1.0f / i) + 1.0f);
-
+		t < T(1)
+		? T(1) - (T(0.5) * (std::pow(T(1) - t, T(1) / i) + T(1)))
+		: T(0.5) * (std::pow(t - T(1), T(1) / i) + T(1));
 	return math::lerp(down, up, curve);
 }
-
-template <class T> using ToStringFunc = std::function<std::string(T)>;
-template <class T> using FromStringFunc = std::function<std::optional<T>(std::string)>;
-template <class T> using ConstrainFunc = std::function<T(T)>;
-template <class T> using DragFunc = std::function<T(T, int, bool)>;
-template <class T> using IncrementFunc = std::function<T(T, bool)>;
-template <class T> using DecrementFunc = std::function<T(T, bool)>;
-template <class T> using StepifyFunc = std::function<T(T)>;
-
-template <class T>
-struct Spec
-{
-	ToStringFunc<T> to_string;
-	FromStringFunc<T> from_string;
-	ConstrainFunc<T> constrain;
-	DragFunc<T> drag;
-	IncrementFunc<T> increment;
-	DecrementFunc<T> decrement;
-	StepifyFunc<T> stepify;
-};
-
-template <class T>
-class Tweaker
-{
-public:
-
-	Tweaker(const Spec<T>& spec)
-		: spec_(spec)
-	{
-	}
-
-	auto stepify(T v) const
-	{
-		return spec_.stepify ? spec_.stepify(v) : v;
-	}
-
-	auto constrain(T v) const
-	{
-		return spec_.constrain ? spec_.constrain(v) : v;
-	}
-
-	auto snap_value(float v, float step_size, float snap_amount) const
-	{
-		return stepify(snap_value(v, step_size, snap_amount));
-	}
-
-	auto increment(T v, bool precise) const
-	{
-		return constrain(stepify(raw_increment(v, precise)));
-	}
-
-	auto decrement(T v, bool precise) const
-	{
-		return constrain(stepify(raw_decrement(v, precise)));
-	}
-
-	auto drag(T v, int amount, bool precise) const
-	{
-		return constrain(stepify(raw_drag(v, amount, precise)));
-	}
-
-	auto to_string(T v) const
-	{
-		return spec_.to_string ? spec_.to_string(v) : "";
-	}
-
-	auto from_string(const ::std::string& str) const
-	{
-		return spec_.from_string ? spec_.from_string(str) : T(0);
-	}
-
-	auto raw_increment(T v, bool precise) const
-	{
-		return spec_.increment ? spec_.increment(v, precise) : v;
-	}
-
-	auto raw_decrement(T v, bool precise) const
-	{
-		return spec_.decrement ? spec_.decrement(v, precise) : v;
-	}
-
-	auto raw_drag(T v, int amount, bool precise) const
-	{
-		return spec_.drag ? spec_.drag(v, amount, precise) : v;
-	}
-
-private:
-
-	Spec<T> spec_;
-};
 
 } // tweak

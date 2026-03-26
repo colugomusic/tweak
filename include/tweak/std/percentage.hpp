@@ -1,66 +1,57 @@
 #pragma once
 
-#include <optional>
-#include <sstream>
-#include <string>
 #include "../convert.hpp"
 #include "../tweak.hpp"
 
-namespace tweak {
-namespace std {
-namespace percentage {
+namespace tweak::std_::percentage {
 
-inline auto stepify(float v)
-{
+template <std::floating_point T> [[nodiscard]] constexpr
+auto stepify(T v) -> T {
 	return tweak::math::stepify<1000>(v);
 }
 
-inline auto constrain(float v)
-{
-	return ::std::clamp(v, 0.0f, 1.0f);
+template <std::floating_point T> [[nodiscard]] constexpr
+auto constrain(T v) -> T {
+	return ::std::clamp(v, T(0), T(1));
 };
 
-inline auto increment(float v, bool precise)
-{
+template <std::floating_point T> [[nodiscard]] constexpr
+auto increment(T v, bool precise) -> T {
 	return tweak::increment<100, 1000>(v, precise);
 };
 
-inline auto decrement(float v, bool precise)
-{
+template <std::floating_point T> [[nodiscard]] constexpr
+auto decrement(T v, bool precise) -> T {
 	return tweak::decrement<100, 1000>(v, precise);
 };
 
-inline auto drag(float v, int amount, bool precise)
-{
+template <std::floating_point T> [[nodiscard]] constexpr
+auto drag(T v, int amount, bool precise) -> T {
 	return tweak::drag<float, 100, 1000>(v, amount / 5, precise);
 };
 
-inline auto to_string(float v)
-{
-	::std::stringstream ss;
-
-	ss << stepify(v * 100.0f) << "%";
-
+template <std::floating_point T> [[nodiscard]]
+auto to_string(T v) -> std::string {
+	auto ss = std::stringstream{};
+	ss << stepify(v * T(100)) << "%";
 	return ss.str();
 }
 
-inline auto from_string(::std::string str) -> ::std::optional<float>
-{
-	auto value = tweak::find_number<float>(::std::move(str));
-
-	if (!value) return ::std::optional<float>();
-
-	return (*value / 100.0f);
+template <std::floating_point T = float> [[nodiscard]]
+auto from_string(const std::string& str) -> std::optional<T> {
+	auto value = tweak::find_number<float>(str);
+	if (!value) { return std::nullopt; }
+	else        { return (*value / T(100)); }
 };
 
-namespace bipolar {
+} // tweak::std_::percentage
 
-inline auto constrain(float v)
-{
-	return ::std::clamp(v, -1.0f, 1.0f);
+namespace tweak::std_::percentage::bipolar {
+
+template <std::floating_point T> [[nodiscard]] constexpr
+auto constrain(T v) -> T {
+	return std::clamp(v, T(-1), T(1));
 };
 
-} // bipolar
-} // percentage
-} // std
-} // tweak
+} // tweak::std_::percentage::bipolar
+

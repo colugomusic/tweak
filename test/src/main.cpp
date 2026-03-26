@@ -3,6 +3,10 @@
 #include <tweak/convert.hpp>
 #include <tweak/math.hpp>
 #include <tweak/tweak.hpp>
+#include <tweak/std/amp.hpp>
+#include <tweak/std/ms.hpp>
+#include <tweak/std/percentage.hpp>
+#include <tweak/std/speed.hpp>
 
 TEST_CASE("non-finite conversion values") {
 	REQUIRE(tweak::convert::db_to_linear(std::numeric_limits<float>::infinity()) == std::numeric_limits<float>::infinity());

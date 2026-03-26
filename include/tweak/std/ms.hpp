@@ -1,34 +1,25 @@
 #pragma once
 
-#include <optional>
-#include <sstream>
-#include <string>
 #include "../convert.hpp"
 #include "../tweak.hpp"
 
-namespace tweak {
-namespace std {
-namespace ms {
+namespace tweak::std_::ms {
 
-inline auto stepify(float v)
-{
-	return math::stepify(v, 0.001f);
+template <std::floating_point T> [[nodiscard]] constexpr
+auto stepify(T v) -> T {
+	return math::stepify(v, T(0.001));
 }
 
-inline auto to_string(float v)
-{
-	::std::stringstream ss;
-
+template <std::floating_point T> [[nodiscard]]
+auto to_string(T v) -> std::string {
+	auto ss = std::stringstream{};
 	ss << ms::stepify(v) << " ms";
-
 	return ss.str();
 }
 
-inline auto from_string(const ::std::string& str)
-{
-	return tweak::find_positive_number<float>(str);
+template <std::floating_point T = float> [[nodiscard]]
+auto from_string(const std::string& str) -> T {
+	return tweak::find_positive_number<T>(str);
 };
 
-} // ms
-} // std
-} // tweak
+} // tweak::std_::ms
