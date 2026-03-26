@@ -8,6 +8,7 @@ target_sources(tweak INTERFACE
 	BASE_DIRS
 		${CMAKE_CURRENT_LIST_DIR}/include
 	FILES
+		${CMAKE_CURRENT_LIST_DIR}/include/tweak/const-math.hpp
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/convert.hpp
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/math.hpp
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/tweak.hpp
@@ -15,8 +16,6 @@ target_sources(tweak INTERFACE
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/std/ms.hpp
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/std/percentage.hpp
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/std/speed.hpp
-		${CMAKE_CURRENT_LIST_DIR}/include/tweak/third_party/boost.v1.txt
-		${CMAKE_CURRENT_LIST_DIR}/include/tweak/third_party/const_math.hpp
 	)
 target_compile_definitions(tweak INTERFACE
 	_USE_MATH_DEFINES
