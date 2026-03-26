@@ -58,7 +58,7 @@ auto from_string(const std::string& str) -> std::optional<T> {
 };
 
 template <std::floating_point T> [[nodiscard]]
-auto to_string(T v) -> T {
+auto to_string(T v) -> std::string {
 	constexpr auto THRESHOLD = T(0.001);
     const auto milestone_hit = [THRESHOLD](T value, T milestone) {
         return value > milestone - THRESHOLD && value < milestone + THRESHOLD;
