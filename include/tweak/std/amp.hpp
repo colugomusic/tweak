@@ -59,7 +59,7 @@ auto decrement(T v, bool precise) -> T {
 template <std::floating_point T> [[nodiscard]] constexpr
 auto drag(T v, int amount, bool precise) -> T {
 	if (v <= SILENT) { v = convert::db_to_linear(T(-61)); }
-	else             { return convert::db_to_linear(tweak::drag<float, 1, 10>(convert::linear_to_db(v), amount / 5, precise)); }
+	return convert::db_to_linear(tweak::drag<float, 1, 10>(convert::linear_to_db(v), amount / 5, precise));
 };
 
 } // tweak::std_::amp

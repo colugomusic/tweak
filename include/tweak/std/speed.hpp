@@ -36,7 +36,7 @@ auto decrement(T v, bool precise) -> T {
 template <std::floating_point T> [[nodiscard]] constexpr
 auto drag(T v, int amount, bool precise) -> T {
     if (v <= FREEZE) { v = convert::linear_to_speed(T(-32)); }
-    else             { return constrain(convert::linear_to_speed(tweak::drag<float, 1, 10>(convert::speed_to_linear(v), amount / 5, precise))); }
+    return constrain(convert::linear_to_speed(tweak::drag<float, 1, 10>(convert::speed_to_linear(v), amount / 5, precise)));
 };
 
 template <std::floating_point T = float> [[nodiscard]]
