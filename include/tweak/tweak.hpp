@@ -9,11 +9,8 @@
 
 namespace tweak {
 
-template <class T> [[nodiscard]] auto find_number(const std::string& str) -> std::optional<T>;
-template <class T> [[nodiscard]] auto find_positive_number(const std::string& str) -> std::optional<T>;
-
-template <> [[nodiscard]]
-inline auto find_number<float>(const std::string& str) -> std::optional<float> {
+template <std::floating_point T> [[nodiscard]]
+inline auto find_number(const std::string& str) -> std::optional<T> {
 	auto r     = std::regex{"(\\-?\\s*[\\.\\d]+)"};
 	auto match = std::smatch{};
 	if (!std::regex_search(str, match, r)) { return std::nullopt; }
@@ -21,8 +18,8 @@ inline auto find_number<float>(const std::string& str) -> std::optional<float> {
 	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <> [[nodiscard]]
-inline auto find_number<int>(const std::string& str) -> std::optional<int> {
+template <std::integral T> [[nodiscard]]
+inline auto find_number(const std::string& str) -> std::optional<T> {
 	auto r     = std::regex{"(\\-?\\s*[\\d]+)"};
 	auto match = std::smatch{};
 	if (!std::regex_search(str, match, r)) { return std::nullopt; }
@@ -30,8 +27,8 @@ inline auto find_number<int>(const std::string& str) -> std::optional<int> {
 	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <> [[nodiscard]]
-inline auto find_positive_number<float>(const std::string& str) -> std::optional<float> {
+template <std::floating_point T> [[nodiscard]]
+inline auto find_positive_number(const std::string& str) -> std::optional<T> {
 	auto r     = std::regex{"([\\.\\d]+)"};
 	auto match = std::smatch{};
 	if (!std::regex_search(str, match, r)) { return std::nullopt; }
@@ -39,8 +36,8 @@ inline auto find_positive_number<float>(const std::string& str) -> std::optional
 	catch (const std::exception&)          { return std::nullopt; }
 }
 
-template <> [[nodiscard]]
-inline auto find_positive_number<int>(const std::string& str) -> std::optional<int> {
+template <std::integral T> [[nodiscard]]
+inline auto find_positive_number(const std::string& str) -> std::optional<T> {
 	auto r     = std::regex{"([\\d]+)"};
 	auto match = std::smatch{};
 	if (!std::regex_search(str, match, r)) { return std::nullopt; }
