@@ -58,14 +58,12 @@ inline T filter_hz_to_linear(T hz)
 	return inverse_lerp(T(-8.513f), T(135.076f), frequency_to_pitch(hz));
 }
 
-template <class T>
-constexpr inline T linear_to_db(T linear) {
-	return T(tweak::const_math::log(linear)) * T(8.6858896380650365530225783783321);
+template <class T> [[nodiscard]] constexpr inline auto linear_to_db(T v) -> T {
+	return std::isfinite(v) ? T(tweak::const_math::log(v)) * T(8.6858896380650365530225783783321) : v;
 }
 
-template <class T>
-constexpr inline T db_to_linear(T db) {
-	return T(tweak::const_math::exp(db * T(0.11512925464970228420089957273422)));
+template <class T> [[nodiscard]] constexpr inline auto db_to_linear(T v) -> T {
+	return std::isfinite(v) ? T(tweak::const_math::exp(v * T(0.11512925464970228420089957273422))) : v;
 }
 
 template <class T>

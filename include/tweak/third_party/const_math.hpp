@@ -7,9 +7,6 @@
  (See accompanying file license.txt or copy at http://boost.org/LICENSE_1_0.txt)
 */
 
-#ifndef _USE_MATH_DEFINES
-#define _USE_MATH_DEFINES
-#endif
 #include <cmath>
 #include <limits> // nan
 

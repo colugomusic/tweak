@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 project(tweak)
+enable_testing()
 add_library(tweak INTERFACE)
 add_library(tweak::tweak ALIAS tweak)
 target_sources(tweak INTERFACE
@@ -17,6 +18,12 @@ target_sources(tweak INTERFACE
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/third_party/boost.v1.txt
 		${CMAKE_CURRENT_LIST_DIR}/include/tweak/third_party/const_math.hpp
 	)
+target_compile_definitions(tweak INTERFACE
+	_USE_MATH_DEFINES
+)
+if (BUILD_TESTING)
+	add_subdirectory(test)
+endif()
 include(CMakePackageConfigHelpers)
 install(TARGETS tweak EXPORT tweak-targets FILE_SET HEADERS)
 install(EXPORT tweak-targets FILE tweak-targets.cmake NAMESPACE tweak:: DESTINATION lib/cmake/tweak)
