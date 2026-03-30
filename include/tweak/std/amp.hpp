@@ -9,7 +9,7 @@ static constexpr auto SILENT = 0.0f;
 
 template <std::floating_point T> [[nodiscard]] constexpr
 auto stepify(T v) -> T {
-	static constexpr auto MIN_THRESHOLD = T(0.00001);
+	constexpr auto MIN_THRESHOLD = T(0.00001);
 	if (v <= MIN_THRESHOLD) { return SILENT; }
 	else                    { return convert::db_to_linear(math::stepify(convert::linear_to_db(v), T(0.1))); }
 }
